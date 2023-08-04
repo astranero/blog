@@ -19,7 +19,6 @@ def home_view(request):
     posts = Post.objects.all()
     return render(request, "home.html", {"posts": posts})
 
-@csrf_exempt
 def login_view(request):
     """This leads to login template, for user authentication
 
@@ -45,12 +44,10 @@ def login_view(request):
     form = UserLoginForm()
     return render(request, "login.html", {"form": form})
 
-@csrf_exempt
 def logout_view(request):
     logout(request)
     return render(request, "logout.html")
 
-@csrf_exempt
 def create_view(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -63,7 +60,6 @@ def create_view(request):
         form = PostForm()
     return render(request, "create.html", {"form": form})
 
-@csrf_exempt
 @login_required()
 def delete_view(request, post_id):
     post = Post.objects.get(id=post_id)
@@ -73,7 +69,6 @@ def delete_view(request, post_id):
         post.delete()
     return redirect("home")
 
-@csrf_exempt
 @login_required()
 def edit_view(request, post_id): 
     post = Post.objects.get(id=post_id)
@@ -101,7 +96,6 @@ def search_view(request):
     posts = [Post(**post_dict) for post_dict in posts]
     return render(request, 'home.html', {'posts': posts})
 
-@csrf_exempt
 def register_view(request):
     # In registration saving password as plain text is bad practice.
     if request.method == "POST":
