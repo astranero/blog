@@ -6,7 +6,7 @@ class CustomAuthentication(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         conn = sqlite3.connect("db.sqlite3")
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM app_customuser WHERE username = '{ username }' ")
+        cursor.execute("SELECT * FROM app_customuser WHERE username ?", {"username": username} )
         user = cursor.fetchone()
         conn.close()
         if user is not None:

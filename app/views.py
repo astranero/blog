@@ -93,7 +93,7 @@ def search_view(request):
     print(f"{query}")
     conn = sqlite3.connect('db.sqlite3')
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM app_post WHERE title LIKE '%{query}%'")
+    cursor.execute("SELECT * FROM app_post WHERE title LIKE ?", (f'%{query}%',))
     posts = cursor.fetchall()
     conn.close()
     columns = [column[0] for column in cursor.description]
