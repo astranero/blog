@@ -27,8 +27,8 @@ def login_view(request):
         render: login.html if there's error of somekind then a message
         redirect: If login successful then redirection to home.html
     """
-    if request.method == "GET":
-        form = UserLoginForm(request.GET)
+    if request.method == "POST":
+        form = UserLoginForm(request.POST)
 
         if form.is_valid():
             username = form.cleaned_data.get("username")
@@ -104,7 +104,7 @@ def search_view(request):
 @csrf_exempt
 def register_view(request):
     # In registration saving password as plain text is bad practice.
-    if request.method == "GET":
+    if request.method == "POST":
         form = UserRegisterForm(request.GET)
         if form.is_valid():
             username = form.cleaned_data.get('username')
