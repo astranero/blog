@@ -1,4 +1,5 @@
 import sqlite3
+import hashlib
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth import get_user_model
@@ -18,9 +19,10 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("The Username field must be set.")
         conn = sqlite3.connect("db.sqlite3")
         cursor = conn.cursor()
+        hashed_password = hashlib.md5(password.encode()).hexdigest()
         try:
             cursor.execute("""INSERT INTO app_customuser (username, password, is_staff, is_superuser) VALUES (?, ?, ?, ?);""",
-            (username, password, kwargs.get("is_staff", False), kwargs.get("is_superuser", False)))
+            (username, hashed_password, kwargs.get("is_staff", False), kwargs.get("is_superuser", False)))
             conn.commit()
             id = cursor.execute("""SELECT id FROM app_customuser WHERE username = ?""", (username,)).fetchone()[0]
             user = self.model(id=id, username=username, password=password, is_staff=kwargs.get("is_staff", False), is_superuser=kwargs.get("is_superuser", False))
@@ -51,7 +53,8 @@ class CustomUser(AbstractBaseUser):
         conn.close()
         if password is not None:
             password = password[0]
-            return password == raw_password
+            hashed_password = hashlib.md5(raw_password.encode()).hexdigest()
+            return password == hashed_password
         return False
 
     def has_perm(self, perm, obj=None):
