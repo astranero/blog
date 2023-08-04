@@ -1,8 +1,7 @@
 import sqlite3
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
-from django.http import HttpResponse, HttpResponseForbidden
-from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegisterForm, UserLoginForm, PostForm
@@ -72,7 +71,7 @@ def delete_view(request, post_id):
 @login_required()
 def edit_view(request, post_id): 
     post = Post.objects.get(id=post_id)
-    if request.user != post.user:
+    if request.user != post.author:
        return HttpResponseForbidden()
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
