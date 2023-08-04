@@ -105,7 +105,7 @@ def search_view(request):
 def register_view(request):
     # In registration saving password as plain text is bad practice.
     if request.method == "POST":
-        form = UserRegisterForm(request.GET)
+        form = UserRegisterForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
